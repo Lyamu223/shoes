@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Select Payment Method</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    .form-group { margin-bottom: 15px; }
+  </style>
+</head>
+<body>
+
+  <h2>Choose Payment Method</h2>
+
+  <form id="paymentForm">
+    <div class="form-group">
+      <label>
+        <input type="radio" name="paymentMethod" value="phone" checked>
+        Pay with Phone Number (Vodacom)
+      </label><br>
+      <label>
+        <input type="radio" name="paymentMethod" value="bank">
+        Pay with Bank Account
+      </label>
+    </div>
+
+    <div class="form-group" id="phoneInputGroup">
+      <label>Phone Number:</label><br>
+      <input type="text" id="phoneNumber" placeholder="0741635549" pattern="0\d{8,9}" title="Start with 0 and 9-10 digits" required>
+    </div>
+
+    <div class="form-group" id="bankInputGroup" style="display:none;">
+      <label>Bank Account Number:</label><br>
+      <input type="text" id="bankAccount" placeholder="42136789" pattern="\d{6,20}" title="6 to 20 digits" >
+    </div>
+
+    <div class="form-group">
+      <label>Amount (TZS):</label><br>
+      <input type="number" id="amount" min="1" required>
+    </div>
+
+    <button type="submit">Pay Now</button>
+  </form>
+
+  <div id="result" style="margin-top: 20px; font-weight: bold;"></div>
+
+  <script>
+    const phoneInputGroup = document.getElementById('phoneInputGroup');
+    const bankInputGroup = document.getElementById('bankInputGroup');
+
+    const paymentForm = document.getElementById('paymentForm');
+    const resultDiv = document.getElementById('result');
+
+    // Show/hide input fields based on selected payment method
+    paymentForm.paymentMethod.forEach(radio => {
+      radio.addEventListener('change', () => {
+        if (radio.value === 'phone') {
+          phoneInputGroup.style.display = 'block';
+          bankInputGroup.style.display = 'none';
+          document.getElementById('phoneNumber').required = true;
+          document.getElementById('bankAccount').required = false;
+        } else {
+          phoneInputGroup.style.display = 'none';
+          bankInputGroup.style.display = 'block';
+          document.getElementById('phoneNumber').required = false;
+          document.getElementById('bankAccount').required = true;
+        }
+        resultDiv.textContent = '';
+      });
+    });
+
+    paymentForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const amount = document.getElementById('amount').value;
+
+      if (paymentForm.paymentMethod.value === 'phone') {
+        const phone = document.getElementById('phoneNumber').value;
+        resultDiv.textContent = `Simulated Payment: TZS ${amount} via Phone Number ${phone}`;
+      } else {
+        const bankAcc = document.getElementById('bankAccount').value;
+        resultDiv.textContent = `Simulated Payment: TZS ${amount} via Bank Account ${bankAcc}`;
+      }
+    });
+  </script>
+
+</body>
+</html>
